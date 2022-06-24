@@ -17,8 +17,8 @@ const express_1 = require("express");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const UserModel_1 = __importDefault(require("../models/UserModel"));
-const UserController = (0, express_1.Router)();
 // start user controller routes section
+const UserController = (0, express_1.Router)();
 UserController.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const salt = yield bcryptjs_1.default.genSalt(10);
@@ -31,8 +31,14 @@ UserController.post('/register', (req, res) => __awaiter(void 0, void 0, void 0,
             password: hashPassword
         });
         const saved_user = yield user.save();
-        const token = jsonwebtoken_1.default.sign({ _id: saved_user._id, first_name: saved_user.first_name, last_name: saved_user.last_name, email: saved_user.email }, TOKEN_SECRET);
-        return res.header('auth-token', token).send(token);
+        const token = jsonwebtoken_1.default.sign({
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 200),
+            _id: user._id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email
+        }, TOKEN_SECRET);
+        return res.header('x-auth-token', token).send(token);
     }
     catch (error) {
         console.log(error);
@@ -46,8 +52,14 @@ UserController.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, fu
         const validPassword = yield bcryptjs_1.default.compare(req.body.password, user.password);
         if (!validPassword)
             return res.status(400).send('invalid credentials');
-        const token = jsonwebtoken_1.default.sign({ _id: user._id, first_name: user.first_name, last_name: user.last_name, email: user.email }, TOKEN_SECRET);
-        return res.header('auth-token', token).send(token);
+        const token = jsonwebtoken_1.default.sign({
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 200),
+            _id: user._id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email
+        }, TOKEN_SECRET);
+        return res.header('x-auth-token', token).send(token);
     }
     catch (error) {
         console.log(error);

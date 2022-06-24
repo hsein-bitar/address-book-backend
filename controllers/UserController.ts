@@ -5,12 +5,13 @@ import jwt from 'jsonwebtoken';
 
 
 import UserModel from '../models/UserModel';
-const UserController = Router();
 
 
 
 
 // start user controller routes section
+const UserController = Router();
+
 UserController.post('/register', async (req: Request, res: Response) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -29,10 +30,16 @@ UserController.post('/register', async (req: Request, res: Response) => {
         });
         const saved_user = await user.save();
         const token = jwt.sign(
-            { _id: saved_user._id, first_name: saved_user.first_name, last_name: saved_user.last_name, email: saved_user.email },
+            {
+                exp: Math.floor(Date.now() / 1000) + (60 * 60 * 200),
+                _id: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email
+            },
             TOKEN_SECRET
         );
-        return res.header('auth-token', token).send(token);
+        return res.header('x-auth-token', token).send(token);
     } catch (error) {
         console.log(error);
     }
@@ -47,16 +54,20 @@ UserController.post('/login', async (req: Request, res: Response) => {
         if (!validPassword) return res.status(400).send('invalid credentials');
 
         const token = jwt.sign(
-            { _id: user._id, first_name: user.first_name, last_name: user.last_name, email: user.email },
+            {
+                exp: Math.floor(Date.now() / 1000) + (60 * 60 * 200),
+                _id: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email
+            },
             TOKEN_SECRET
         );
-        return res.header('auth-token', token).send(token);
+        return res.header('x-auth-token', token).send(token);
     } catch (error) {
         console.log(error);
         res.status(500).send(error);
     }
 })
-
-
 
 export default UserController;
