@@ -38,20 +38,21 @@ UserController.post('/register', (req, res) => __awaiter(void 0, void 0, void 0,
             last_name: user.last_name,
             email: user.email
         }, TOKEN_SECRET);
-        return res.header('x-auth-token', token).send(token);
+        return res.status(200).header('x-auth-token', token).json(token);
     }
     catch (error) {
         console.log(error);
+        return res.status(500).json({ error: error });
     }
 }));
 UserController.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield UserModel_1.default.findOne({ email: req.body.email });
         if (!user)
-            return res.status(400).send('invalid credentials');
+            return res.status(400).json('invalid credentials');
         const validPassword = yield bcryptjs_1.default.compare(req.body.password, user.password);
         if (!validPassword)
-            return res.status(400).send('invalid credentials');
+            return res.status(400).json('invalid credentials');
         const token = jsonwebtoken_1.default.sign({
             exp: Math.floor(Date.now() / 1000) + (60 * 60 * 200),
             _id: user._id,
@@ -59,11 +60,11 @@ UserController.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, fu
             last_name: user.last_name,
             email: user.email
         }, TOKEN_SECRET);
-        return res.header('x-auth-token', token).send(token);
+        return res.status(200).header('x-auth-token', token).json(token);
     }
     catch (error) {
         console.log(error);
-        res.status(500).send(error);
+        return res.status(500).json({ error: error });
     }
 }));
 exports.default = UserController;

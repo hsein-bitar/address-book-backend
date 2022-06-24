@@ -39,19 +39,20 @@ UserController.post('/register', async (req: Request, res: Response) => {
             },
             TOKEN_SECRET
         );
-        return res.header('x-auth-token', token).send(token);
+        return res.status(200).header('x-auth-token', token).json(token);
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ error: error });
     }
 })
 
 UserController.post('/login', async (req: Request, res: Response) => {
     try {
         const user = await UserModel.findOne({ email: req.body.email });
-        if (!user) return res.status(400).send('invalid credentials');
+        if (!user) return res.status(400).json('invalid credentials');
 
         const validPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!validPassword) return res.status(400).send('invalid credentials');
+        if (!validPassword) return res.status(400).json('invalid credentials');
 
         const token = jwt.sign(
             {
@@ -63,10 +64,10 @@ UserController.post('/login', async (req: Request, res: Response) => {
             },
             TOKEN_SECRET
         );
-        return res.header('x-auth-token', token).send(token);
+        return res.status(200).header('x-auth-token', token).json(token);
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
+        return res.status(500).json({ error: error });
     }
 })
 

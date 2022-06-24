@@ -81,8 +81,6 @@ ContactController.get('/listcontacts', UserAuthMiddleware_1.isLoggedIn, (req, re
         const query_result = yield ContactModel_1.default.find({
             user_id: res.locals.user._id
         });
-        // if (query_result.matchedCount === 0) return res.status(403).send("Could not find contact.");
-        // if (query_result.modifiedCount === 0) return res.status(403).send("Contact found but could not be updated.");
         return res.status(200).send(query_result);
     }
     catch (error) {

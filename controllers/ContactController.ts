@@ -70,8 +70,6 @@ ContactController.get('/listcontacts', isLoggedIn, async (req: Request, res: Res
         const query_result = await ContactModel.find({
             user_id: res.locals.user._id
         });
-        // if (query_result.matchedCount === 0) return res.status(403).send("Could not find contact.");
-        // if (query_result.modifiedCount === 0) return res.status(403).send("Contact found but could not be updated.");
         return res.status(200).send(query_result);
     } catch (error) {
         console.log(error);
