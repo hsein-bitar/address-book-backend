@@ -1,6 +1,6 @@
 # address-book-backend
 
-Nodejs &amp; MongoDB backend for the address book project, where you can store your contacts and display them on a map.
+Nodejs &amp; MongoDB backend for the address book project, where you can store your contacts and display them on a map, provided by Google Maps API.
 
 <br>
 
