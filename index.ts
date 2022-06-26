@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
 import cors from 'cors';
 dotenv.config();
 
@@ -10,7 +10,9 @@ import ContactController from './controllers/ContactController';
 
 // get a database connection instance
 const DB_CONNECT = process.env.DB_CONNECT;
-mongoose.connect(DB_CONNECT)
+mongoose.connect(DB_CONNECT, <ConnectOptions>{
+    autoIndex: true,
+})
     .then(res => console.log("DB conencted, model names: ", res.modelNames()))
     .catch(err => console.log(err))
 
@@ -24,5 +26,5 @@ app.use('/api/contact', ContactController);
 
 // start server
 app.listen(process.env.PORT, () => {
-    console.log(`🚀🚀 Server is running at https://localhost:${process.env.PORT}`);
+    console.log(`🚀🚀🚀 Server is running at https://localhost:${process.env.PORT}`);
 });
