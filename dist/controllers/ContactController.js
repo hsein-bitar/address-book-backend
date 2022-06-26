@@ -32,7 +32,7 @@ ContactController.post('/addcontact', UserAuthMiddleware_1.isLoggedIn, (req, res
         });
         const saved_contact = yield contact.save();
         // console.log("saved_contact is: \n", saved_contact)
-        return res.send(saved_contact);
+        return res.json(saved_contact);
     }
     catch (error) {
         console.log(error);
@@ -52,13 +52,13 @@ ContactController.put('/updatecontact', UserAuthMiddleware_1.isLoggedIn, (req, r
             location: req.body.location,
         });
         if (query_result.matchedCount === 0)
-            return res.status(403).send("Could not find contact.");
+            return res.status(403).json({ message: "Could not find contact." });
         if (query_result.modifiedCount === 0)
-            return res.status(403).send("Contact found but could not be updated.");
-        return res.status(200).send("Contact is updated.");
+            return res.status(403).json({ message: "Contact found but could not be updated." });
+        return res.status(200).json({ message: "Contact is updated." });
     }
     catch (error) {
-        console.log(error);
+        return res.status(500).json({ message: "Contact is updated." });
     }
 }));
 ContactController.delete('/deletecontact', UserAuthMiddleware_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -69,8 +69,8 @@ ContactController.delete('/deletecontact', UserAuthMiddleware_1.isLoggedIn, (req
         });
         console.log(query_result);
         if (query_result.deletedCount === 0)
-            return res.status(403).send("Failed to delete contact.");
-        return res.status(200).send("Contact is deleted.");
+            return res.status(403).json({ message: "Failed to delete contact." });
+        return res.status(200).json({ message: "Contact is deleted." });
     }
     catch (error) {
         console.log(error);
@@ -81,7 +81,7 @@ ContactController.get('/listcontacts', UserAuthMiddleware_1.isLoggedIn, (req, re
         const query_result = yield ContactModel_1.default.find({
             user_id: res.locals.user._id
         });
-        return res.status(200).send(query_result);
+        return res.status(200).json(query_result);
     }
     catch (error) {
         console.log(error);
