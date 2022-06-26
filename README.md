@@ -37,6 +37,8 @@ $ npm install
 
 ## 5 - Replace the mongoDB connection string URI with your own
 
+<br>
+
 ## 6 - Run the project using the following command:
 
 ```sh
